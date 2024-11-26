@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Sidebar } from 'primereact/sidebar'
 
-const AppSidebar: React.FC = () => {
+export const AppSidebar = () => {
   const [visible, setVisible] = useState(false)
 
   return (
@@ -30,5 +30,3 @@ const AppSidebar: React.FC = () => {
     </div>
   )
 }
-
-export default AppSidebar

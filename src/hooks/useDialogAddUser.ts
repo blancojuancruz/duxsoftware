@@ -1,34 +1,50 @@
-import { Dispatch, SetStateAction, useState } from 'react'
+import { FormEvent } from 'react'
+import { parseUserFormToUserRequest } from '@/adapters/parseUserFormToUserRequest'
+import { useUserContext } from '@/context/user.context'
+import { UserFormValues } from '@/models/User'
 
 interface Props {
-  setOpenDialogAddUser: Dispatch<SetStateAction<boolean>>
+  values: UserFormValues
+  reset: (newValues?: Partial<UserFormValues> | undefined) => void
+  validateUserForm: () => boolean
 }
 
-export const useDialogAddUser = ({ setOpenDialogAddUser }: Props) => {
-  const [selectedState, setSelectedState] = useState<string | null>(null)
-  const [selectedSector, setSelectedSector] = useState<string | null>(null)
-  const [id, setId] = useState<string>('')
-  const [name, setName] = useState<string>('')
+export const useDialogAddUser = ({
+  values,
+  reset,
+  validateUserForm
+}: Props) => {
+  const {
+    handleCreateUser,
+    editingUser,
+    handleUpdateUser,
+    setDialogCreateEditUser,
+    setEditingUser
+  } = useUserContext()
 
-  const handleCloseDialog = () => {
-    setOpenDialogAddUser(false)
+  const handleCloseAddEditDialog = () => {
+    if (editingUser) setEditingUser(false)
+    setDialogCreateEditUser(false)
+    reset()
   }
 
-  const handleSaveUser = () => {
-    handleCloseDialog()
-    console.log('usuario guardado correctamente')
+  const handleCreateUpdateUser = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    const isValid = validateUserForm()
+
+    if (isValid) {
+      const parse = parseUserFormToUserRequest(values)
+
+      if (editingUser) handleUpdateUser(parse)
+      else handleCreateUser(parse)
+
+      handleCloseAddEditDialog()
+    }
   }
 
   return {
-    id,
-    setId,
-    name,
-    setName,
-    selectedState,
-    setSelectedState,
-    selectedSector,
-    setSelectedSector,
-    handleSaveUser,
-    handleCloseDialog
+    handleCreateUpdateUser,
+    handleCloseAddEditDialog
   }
 }

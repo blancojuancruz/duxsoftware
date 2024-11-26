@@ -1,26 +1,13 @@
-import { DialogAddUser } from '@/components/ui/DialogAddUser'
-import { useIndex } from '@/hooks/useIndex'
-import { HeaderTabla } from '@/components/ui/HeaderTabla'
+import { TableHeader } from '@/components/ui/TableHeader'
 import { Layout } from '@/components/templates/Layout'
-import { TablaUsuarios } from '@/components/datatable/TablaUsuarios'
+import { UsersTable } from '@/components/datatable/UsersTable'
 
 const Home = () => {
-  const {
-    openDialogAddUser,
-    setOpenDialogAddUser,
-    handleOpenCloseDialogAddUser
-  } = useIndex()
-
   return (
     <Layout>
-      <HeaderTabla
-        handleOpenCloseDialogAddUser={handleOpenCloseDialogAddUser}
-      />
-      <TablaUsuarios />
-      <DialogAddUser
-        openDialogAddUser={openDialogAddUser}
-        setOpenDialogAddUser={setOpenDialogAddUser}
-      />
+      <TableHeader />
+
+      <UsersTable />
     </Layout>
   )
 }

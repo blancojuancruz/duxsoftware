@@ -1,7 +1,5 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+html {
+  height: 100%;
 }
 
 body {
@@ -10,9 +8,36 @@ body {
   -moz-osx-font-smoothing: grayscale;
   color: var(--text-color);
   background-color: var(--surface-ground);
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.table-container {
+  max-height: 700px;
+  overflow: auto;
+  border: 1px solid var(--border-color);
+  background-color: var(--surface-ground);
+}
+
+.table-container .p-paginator {
+  position: sticky;
+  bottom: 0;
+}
+
+.confirmDialog .p-confirm-dialog-accept {
+  background-color: #204887;
+}
+
+.confirmDialog .p-confirm-dialog-reject {
+  color: #204887;
 }
 
 img {
   max-width: 100%;
   height: auto;
+}
+
+button {
+  margin: 0;
 }

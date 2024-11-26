@@ -1,7 +1,7 @@
 import { User } from '@/models/User'
 
 const API_URL = 'https://staging.duxsoftware.com.ar/api/personal'
-const SECTOR = '1000'
+const SECTOR = '2222'
 
 export const getUsers = async (): Promise<{
   users: User[]
@@ -12,7 +12,7 @@ export const getUsers = async (): Promise<{
   const response = await fetch(`${API_URL}?${queryParams}`)
 
   if (!response.ok) {
-    throw new Error('Failed to fetch users')
+    throw new Error('Error al obtener los usuarios')
   }
 
   const users = await response.json()
@@ -62,7 +62,7 @@ export const createUser = async (user: Omit<User, 'id'>): Promise<User> => {
   })
 
   if (!response.ok) {
-    throw new Error('Failed to create user')
+    throw new Error('Error al crear el nuevo usuario')
   }
 
   return response.json()
