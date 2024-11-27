@@ -35,9 +35,7 @@ const getUsers = async (
 
   const response = await fetch(`${API_URL}?${queryParams}`)
 
-  if (!response.ok) {
-    throw new Error('Error al obtener los usuarios')
-  }
+  if (!response.ok) console.log('Error al obtener los usuarios')
 
   const users = await response.json()
   const totalCount = parseInt(response.headers.get('X-Total-Count') || '0', 10)
@@ -54,9 +52,7 @@ const createUser = async (user: Omit<User, 'sector'>): Promise<User> => {
     body: JSON.stringify({ ...user, sector: SECTOR })
   })
 
-  if (!response.ok) {
-    throw new Error('Error al crear el nuevo usuario')
-  }
+  if (!response.ok) console.log('Error al crear el nuevo usuario')
 
   return response.json()
 }
@@ -70,9 +66,7 @@ const updateUser = async (user: Omit<User, 'sector'>): Promise<User> => {
     body: JSON.stringify({ ...user, sector: SECTOR })
   })
 
-  if (!response.ok) {
-    throw new Error('Error al modificar usuario')
-  }
+  if (!response.ok) console.log('Error al modificar usuario')
 
   return response.json()
 }
@@ -82,9 +76,7 @@ const deleteUser = async (id: string): Promise<void> => {
     method: 'DELETE'
   })
 
-  if (!response.ok) {
-    throw new Error('Error al eliminar usuario')
-  }
+  if (!response.ok) console.log('Error al eliminar usuario')
 }
 
 export const userServices = {
