@@ -1,4 +1,4 @@
-import { useUserContext } from '@/context/user.context'
+import { useUserContext } from '@/contexts/user.context'
 import { Button } from 'primereact/button'
 
 export const TableHeader = () => {

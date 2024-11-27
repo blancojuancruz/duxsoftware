@@ -1,4 +1,4 @@
-import { useUserContext } from '@/context/user.context'
+import { useUserContext } from '@/contexts/user.context'
 import { User } from '@/models/User'
 import { Button } from 'primereact/button'
 
@@ -19,6 +19,7 @@ export const ActionTemplate = ({ rowData, handleOpenDialogEdit }: Props) => {
         rounded
         className="p-button-sm"
         onClick={() => handleOpenDialogEdit(rowData)}
+        title="Editar Usuario"
       />
       <Button
         icon="pi pi-trash"
@@ -27,6 +28,7 @@ export const ActionTemplate = ({ rowData, handleOpenDialogEdit }: Props) => {
         rounded
         className="p-button-sm"
         onClick={() => handleDeleteUser(rowData)}
+        title="Eliminar Usuario"
       />
     </div>
   )

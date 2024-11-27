@@ -12,7 +12,7 @@ interface FormState<T extends FieldValues> {
 
 type Validator<T> = (value: T[keyof T]) => string | undefined
 
-export const useFormCustom = <T extends FieldValues>(
+export const useCustomForm = <T extends FieldValues>(
   initialValues: T,
   validators: Partial<Record<keyof T, Validator<T>>>
 ) => {

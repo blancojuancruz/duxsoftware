@@ -1,15 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useUserContext } from '@/context/user.context'
-import { Pagination } from '@/models/Pagination'
+import { useUserContext } from '@/contexts/user.context'
 import { User } from '@/models/User'
 import { DataTableStateEvent } from 'primereact/datatable'
 import { ChangeEvent, useEffect, useState } from 'react'
-import { useFormCustom } from './useCustomForm'
+import { useCustomForm } from './useCustomForm'
 import { addUserInitForm } from '@/static/form/addUserInitForm'
 import { userValidators } from '@/validators/userValidator'
 import { parseUserRequestToFormUser } from '@/adapters/parseUserFormToUserRequest'
 import { DropdownChangeEvent } from 'primereact/dropdown'
-import { queryParamsInit } from '@/static/paginationInit'
+import { queryParamsInit } from '@/static/queryParamsInit'
+import { IQueryParams } from '@/models/Global'
 
 export const useTableUsers = () => {
   const { handleGetAllUsers, setDialogCreateEditUser, setEditingUser } =
@@ -24,9 +24,10 @@ export const useTableUsers = () => {
     reset,
     validateUserForm,
     setValues
-  } = useFormCustom(addUserInitForm, userValidators)
+  } = useCustomForm(addUserInitForm, userValidators)
 
-  const [queryParams, setQueryParams] = useState<Pagination>(queryParamsInit)
+  // ESTADO QUE CONTROLA LA REQUEST DE USUARIOS
+  const [queryParams, setQueryParams] = useState<IQueryParams>(queryParamsInit)
 
   const handleChangePage = (event: DataTableStateEvent) => {
     setQueryParams((prevParams) => ({

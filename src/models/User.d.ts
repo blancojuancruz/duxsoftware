@@ -1,3 +1,5 @@
+import { IQueryParams } from './Global'
+
 export interface User {
   id: string
   usuario: string
@@ -21,8 +23,8 @@ export interface IUserContext {
   editingUser: boolean
   setEditingUser: Dispatch<SetStateAction<boolean>>
   toastContent: MutableRefObject<Toast | null>
-  handleGetAllUsers: (params: Pagination) => Promise<void>
-  handleUpdateUser: (user: User) => void
+  handleGetAllUsers: (params: IQueryParams) => Promise<void>
+  handleUpdateUser: (user: Omit<User, 'sector'>) => Promise<void>
   handleDeleteUser: (user: User) => void
-  handleCreateUser: (newUser: User) => Promise<User | undefined>
+  handleCreateUser: (newUser: Omit<User, 'sector'>) => Promise<void>
 }

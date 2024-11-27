@@ -1,11 +1,11 @@
+import { IQueryParams } from '@/models/Global'
 import { User } from '@/models/User'
-import { Pagination } from '@/models/Pagination'
 
 const API_URL = 'https://staging.duxsoftware.com.ar/api/personal'
 const SECTOR = '2222'
 
 const getUsers = async (
-  params: Pagination
+  params: IQueryParams
 ): Promise<{
   users: User[]
   totalCount: number
@@ -45,7 +45,7 @@ const getUsers = async (
   return { users, totalCount }
 }
 
-const createUser = async (user: Omit<User, 'id'>): Promise<User> => {
+const createUser = async (user: Omit<User, 'sector'>): Promise<User> => {
   const response = await fetch(API_URL, {
     method: 'POST',
     headers: {
@@ -61,7 +61,7 @@ const createUser = async (user: Omit<User, 'id'>): Promise<User> => {
   return response.json()
 }
 
-const updateUser = async (user: User): Promise<User> => {
+const updateUser = async (user: Omit<User, 'sector'>): Promise<User> => {
   const response = await fetch(`${API_URL}/${user.id}`, {
     method: 'PUT',
     headers: {

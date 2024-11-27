@@ -3,7 +3,7 @@ import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
-import { useUserContext } from '@/context/user.context'
+import { useUserContext } from '@/contexts/user.context'
 import { UserFormValues } from '@/models/User'
 import { ChangeEvent } from 'react'
 
@@ -17,7 +17,7 @@ interface Props {
   validateUserForm: () => boolean
 }
 
-export const AddUserDialog = ({
+export const AddEditUserDialog = ({
   values,
   errors,
   touched,

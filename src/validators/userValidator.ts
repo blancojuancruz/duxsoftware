@@ -1,15 +1,7 @@
-import { EstadoEnum, EstadoUsuarioEnum } from '@/enums/Estado.enum'
 import { UserFormValues } from '@/models/User'
 
-const ALLOWED_STATES = [
-  EstadoUsuarioEnum.HABILITADO,
-  EstadoUsuarioEnum.DESHABILITADO,
-  EstadoEnum.ACTIVO,
-  EstadoEnum.INACTIVO
-]
-
 const validateId = (value: string): string | undefined => {
-  if (!value) return 'El ID es requerido'
+  if (!value) return 'Ingrese un Id'
   return undefined
 }
 
@@ -22,7 +14,6 @@ const validateName = (value: string): string | undefined => {
 
 const validateState = (value: string): string | undefined => {
   if (!value) return 'Seleccione al menos un estado'
-  if (!ALLOWED_STATES.includes(value)) return 'Estado no permitido'
   return undefined
 }
 

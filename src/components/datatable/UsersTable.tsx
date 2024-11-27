@@ -5,8 +5,8 @@ import { ConfirmDialog } from 'primereact/confirmdialog'
 import { Toast } from 'primereact/toast'
 import { ProgressSpinner } from 'primereact/progressspinner'
 import { useTableUsers } from '@/hooks/useTableUsers'
-import { useUserContext } from '@/context/user.context'
-import { AddUserDialog } from '../ui/AddUserDialog'
+import { useUserContext } from '@/contexts/user.context'
+import { AddEditUserDialog } from '../ui/AddEditUserDialog'
 import { HeaderTable } from './HeaderTable'
 import { ActionTemplate } from './ActionTemplate'
 import { SectorTemplate } from './SectorTemplate'
@@ -114,7 +114,9 @@ export const UsersTable = () => {
           </DataTable>
         </Suspense>
       </div>
-      <AddUserDialog
+
+      {/* ESTE COMPONENTE SE ENCARGA TANTO DE AÑADIR COMO DE EDITAR USUARIOS */}
+      <AddEditUserDialog
         values={values}
         errors={errors}
         touched={touched}

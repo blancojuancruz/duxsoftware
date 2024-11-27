@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { ProviderPropsModel } from '@/models/Global'
+import { IQueryParams, ProviderPropsModel } from '@/models/Global'
 import { User, IUserContext } from '@/models/User'
-import { Pagination } from '@/models/Pagination'
 import { userServices } from '@/services/user.services'
 import { confirmDialog } from 'primereact/confirmdialog'
 import { Toast } from 'primereact/toast'
@@ -19,7 +18,7 @@ export const UserProvider = ({ children }: ProviderPropsModel) => {
   const [editingUser, setEditingUser] = useState<boolean>(false)
   const toastContent = useRef<Toast | null>(null)
 
-  const handleGetAllUsers = async (params: Pagination) => {
+  const handleGetAllUsers = async (params: IQueryParams) => {
     setLoadingUser(true)
     try {
       const { users: fetchedUsers, totalCount } = await userServices.getUsers(
@@ -39,9 +38,10 @@ export const UserProvider = ({ children }: ProviderPropsModel) => {
     }
   }
 
-  const handleCreateUser = async (newUser: Omit<User, 'id'>) => {
+  const handleCreateUser = async (newUser: Omit<User, 'sector'>) => {
     setLoadingUser(true)
     try {
+      console.log(newUser)
       const createdUser = await userServices.createUser(newUser)
       setUsers((prevUsers) => [...prevUsers, createdUser])
       setTotalCount((prevCount) => prevCount + 1)
@@ -50,7 +50,6 @@ export const UserProvider = ({ children }: ProviderPropsModel) => {
         summary: 'Usuario Creado',
         detail: 'Usuario creado exitosamente'
       })
-      return createdUser
     } catch (error) {
       toastContent.current!.show({
         severity: 'error',
@@ -62,7 +61,7 @@ export const UserProvider = ({ children }: ProviderPropsModel) => {
     }
   }
 
-  const handleUpdateUser = async (user: User) => {
+  const handleUpdateUser = async (user: Omit<User, 'sector'>) => {
     setLoadingUser(true)
     try {
       const updatedUser = await userServices.updateUser(user)
@@ -76,7 +75,6 @@ export const UserProvider = ({ children }: ProviderPropsModel) => {
         summary: 'Usuario Modificado',
         detail: 'Usuario Modificado exitosamente'
       })
-      return updatedUser
     } catch (error) {
       toastContent.current!.show({
         severity: 'error',

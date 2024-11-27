@@ -1,8 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import logo from '../../../public/logo.png'
 import { PrimeReactProvider } from 'primereact/api'
-import { UserProvider } from '@/context/user.context'
+import { UserProvider } from '@/contexts/user.context'
 import { AppSidebar } from '../ui/Sidebar'
 
 interface Props {
@@ -20,13 +19,13 @@ export const Layout = ({ children }: Props) => {
             rel="stylesheet"
             href="https://unpkg.com/primeflex@latest/primeflex.css"
           />
-          <link rel="icon" href="/favicon.ico" />
+          <link rel="icon" type="image/svg+xml" href="/logo.ico" />
         </Head>
         <div className="flex flex-column flex-grow-1 min-h-screen">
           <header>
             <nav className="flex align-items-center justify-content-between px-6 py-2 bg-blue-700 text-white">
               <Image
-                src={logo}
+                src="/logo.png"
                 alt="Logo Empresarial"
                 width={50}
                 height={50}
