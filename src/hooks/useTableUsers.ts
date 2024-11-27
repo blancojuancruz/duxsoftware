@@ -2,7 +2,6 @@
 import { useUserContext } from '@/context/user.context'
 import { Pagination } from '@/models/Pagination'
 import { User } from '@/models/User'
-import { FilterMatchMode } from 'primereact/api'
 import { DataTableStateEvent } from 'primereact/datatable'
 import { ChangeEvent, useEffect, useState } from 'react'
 import { useFormCustom } from './useCustomForm'
@@ -10,6 +9,7 @@ import { addUserInitForm } from '@/static/form/addUserInitForm'
 import { userValidators } from '@/validators/userValidator'
 import { parseUserRequestToFormUser } from '@/adapters/parseUserFormToUserRequest'
 import { DropdownChangeEvent } from 'primereact/dropdown'
+import { queryParamsInit } from '@/static/paginationInit'
 
 export const useTableUsers = () => {
   const { handleGetAllUsers, setDialogCreateEditUser, setEditingUser } =
@@ -26,34 +26,19 @@ export const useTableUsers = () => {
     setValues
   } = useFormCustom(addUserInitForm, userValidators)
 
-  const [lazyParams, setLazyParams] = useState<Pagination>({
-    first: 0,
-    rows: 10,
-    page: 1,
-    sortField: undefined,
-    sortOrder: null
-  })
-  const [filters, setFilters] = useState({
-    global: { value: '', matchMode: FilterMatchMode.CONTAINS },
-    id: { value: null, matchMode: FilterMatchMode.EQUALS },
-    usuario: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    estado: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    sector: { value: null, matchMode: FilterMatchMode.EQUALS }
-  })
-  const [globalFilterValue, setGlobalFilterValue] = useState<string>('')
-  const [sectorFilter, setSectorFilter] = useState<string>('')
+  const [queryParams, setQueryParams] = useState<Pagination>(queryParamsInit)
 
   const handleChangePage = (event: DataTableStateEvent) => {
-    setLazyParams((prevParams) => ({
+    setQueryParams((prevParams) => ({
       ...prevParams,
       first: event.first,
       rows: event.rows,
-      page: (event.page ?? 0) + 1
+      page: Math.floor(event.first / event.rows) + 1
     }))
   }
 
   const handleSortData = (event: DataTableStateEvent) => {
-    setLazyParams((prevParams) => ({
+    setQueryParams((prevParams) => ({
       ...prevParams,
       sortField: event.sortField,
       sortOrder: event.sortOrder
@@ -62,22 +47,44 @@ export const useTableUsers = () => {
 
   const handleGlobalFilter = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
-    const _filters = { ...filters }
 
-    _filters['global'].value = value
-
-    setFilters(_filters)
-    setGlobalFilterValue(value)
+    setQueryParams((prevParams) => ({
+      ...prevParams,
+      first: 0,
+      page: 1,
+      filters: {
+        ...prevParams.filters,
+        globalFilter: value
+      }
+    }))
   }
 
   const handleFilterSector = (e: DropdownChangeEvent) => {
     const value = e.value
-    const _filters = { ...filters }
 
-    _filters['sector'].value = value
+    setQueryParams((prevParams) => ({
+      ...prevParams,
+      first: 0,
+      page: 1,
+      filters: {
+        ...prevParams.filters,
+        sectorFilter: value
+      }
+    }))
+  }
 
-    setFilters(_filters)
-    setSectorFilter(value)
+  const handleFilterState = (e: DropdownChangeEvent) => {
+    const value = e.value
+
+    setQueryParams((prevParams) => ({
+      ...prevParams,
+      first: 0,
+      page: 1,
+      filters: {
+        ...prevParams.filters,
+        stateFilter: value
+      }
+    }))
   }
 
   const handleOpenDialogEdit = (user: User) => {
@@ -87,18 +94,19 @@ export const useTableUsers = () => {
     setValues(parseUser)
   }
 
+  const handleLimpiarFiltros = () => {
+    setQueryParams(queryParamsInit)
+  }
+
   useEffect(() => {
-    handleGetAllUsers()
-  }, [])
+    handleGetAllUsers(queryParams)
+  }, [queryParams])
 
   return {
     values,
     errors,
     touched,
-    lazyParams,
-    filters,
-    globalFilterValue,
-    sectorFilter,
+    queryParams,
     handleChangePage,
     handleSortData,
     handleGlobalFilter,
@@ -107,6 +115,8 @@ export const useTableUsers = () => {
     handleInputChange,
     handleDropdownChange,
     reset,
-    validateUserForm
+    validateUserForm,
+    handleFilterState,
+    handleLimpiarFiltros
   }
 }

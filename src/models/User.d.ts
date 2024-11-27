@@ -21,7 +21,7 @@ export interface IUserContext {
   editingUser: boolean
   setEditingUser: Dispatch<SetStateAction<boolean>>
   toastContent: MutableRefObject<Toast | null>
-  handleGetAllUsers: () => Promise<void>
+  handleGetAllUsers: (params: Pagination) => Promise<void>
   handleUpdateUser: (user: User) => void
   handleDeleteUser: (user: User) => void
   handleCreateUser: (newUser: User) => Promise<User | undefined>

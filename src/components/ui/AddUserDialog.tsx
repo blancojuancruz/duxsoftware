@@ -1,5 +1,4 @@
 import { useDialogAddUser } from '@/hooks/useDialogAddUser'
-import { states } from '@/static/dropdownOptions'
 import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown'
@@ -29,13 +28,12 @@ export const AddUserDialog = ({
 }: Props) => {
   const { editingUser, dialogCreateEditUser } = useUserContext()
 
-  const { handleCreateUpdateUser, handleCloseAddEditDialog } = useDialogAddUser(
-    {
+  const { handleCreateUpdateUser, handleCloseAddEditDialog, stateOptions } =
+    useDialogAddUser({
       values,
       reset,
       validateUserForm
-    }
-  )
+    })
 
   return (
     <Dialog
@@ -92,7 +90,7 @@ export const AddUserDialog = ({
             name="state"
             value={values.state}
             onChange={handleDropdownChange}
-            options={states}
+            options={stateOptions}
             placeholder="Seleccionar el estado"
             className={`w-full  ${errors.id && touched.id ? 'p-invalid' : ''}`}
             invalid={Boolean(errors.state)}

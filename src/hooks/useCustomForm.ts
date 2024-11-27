@@ -49,9 +49,9 @@ export const useFormCustom = <T extends FieldValues>(
     }
   }
 
-  const reset = (newValues?: Partial<T>) => {
+  const reset = () => {
     setFormState({
-      values: { ...initialValues, ...newValues },
+      values: { ...initialValues },
       errors: {},
       touched: {}
     })

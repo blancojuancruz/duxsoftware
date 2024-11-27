@@ -20,16 +20,10 @@ export const parseUserRequestToFormUser = (
 ): UserFormValues => {
   const { id, sector, usuario, estado } = editingUser
 
-  const parseEstado = () => {
-    if (estado === EstadoUsuarioEnum.HABILITADO) return EstadoEnum.ACTIVO
-    if (estado === EstadoUsuarioEnum.DESHABILITADO) return EstadoEnum.INACTIVO
-    else return estado
-  }
-
   return {
     id,
     name: usuario,
-    state: parseEstado(),
+    state: estado,
     sector: sector.toString()
   }
 }

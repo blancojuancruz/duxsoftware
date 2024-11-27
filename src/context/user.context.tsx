@@ -2,12 +2,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { ProviderPropsModel } from '@/models/Global'
 import { User, IUserContext } from '@/models/User'
-import {
-  createUser,
-  deleteUser,
-  getUsers,
-  updateUser
-} from '@/services/user.services'
+import { Pagination } from '@/models/Pagination'
+import { userServices } from '@/services/user.services'
 import { confirmDialog } from 'primereact/confirmdialog'
 import { Toast } from 'primereact/toast'
 import { createContext, useContext, useMemo, useRef, useState } from 'react'
@@ -23,14 +19,21 @@ export const UserProvider = ({ children }: ProviderPropsModel) => {
   const [editingUser, setEditingUser] = useState<boolean>(false)
   const toastContent = useRef<Toast | null>(null)
 
-  const handleGetAllUsers = async () => {
+  const handleGetAllUsers = async (params: Pagination) => {
     setLoadingUser(true)
     try {
-      const { users: fetchedUsers, totalCount } = await getUsers()
+      const { users: fetchedUsers, totalCount } = await userServices.getUsers(
+        params
+      )
       setUsers(fetchedUsers)
       setTotalCount(totalCount)
     } catch (error) {
       console.error('Error al obtener los usuarios:', error)
+      toastContent.current!.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Error al obtener usuarios'
+      })
     } finally {
       setLoadingUser(false)
     }
@@ -39,16 +42,15 @@ export const UserProvider = ({ children }: ProviderPropsModel) => {
   const handleCreateUser = async (newUser: Omit<User, 'id'>) => {
     setLoadingUser(true)
     try {
-      const response = await createUser(newUser)
+      const createdUser = await userServices.createUser(newUser)
+      setUsers((prevUsers) => [...prevUsers, createdUser])
+      setTotalCount((prevCount) => prevCount + 1)
       toastContent.current!.show({
         severity: 'success',
         summary: 'Usuario Creado',
         detail: 'Usuario creado exitosamente'
       })
-
-      handleGetAllUsers()
-
-      return response
+      return createdUser
     } catch (error) {
       toastContent.current!.show({
         severity: 'error',
@@ -63,26 +65,17 @@ export const UserProvider = ({ children }: ProviderPropsModel) => {
   const handleUpdateUser = async (user: User) => {
     setLoadingUser(true)
     try {
-      const updatedUser = await updateUser(user)
-
-      setUsers((prevUsers) => {
-        const index = prevUsers.findIndex((u) => u.id === updatedUser.id)
-
-        if (index !== -1) {
-          const updatedUsers = [...prevUsers]
-          updatedUsers[index] = updatedUser
-          return updatedUsers
-        }
-
-        return prevUsers
-      })
-
+      const updatedUser = await userServices.updateUser(user)
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user.id === updatedUser.id ? updatedUser : user
+        )
+      )
       toastContent.current!.show({
         severity: 'success',
         summary: 'Usuario Modificado',
         detail: 'Usuario Modificado exitosamente'
       })
-
       return updatedUser
     } catch (error) {
       toastContent.current!.show({
@@ -95,28 +88,32 @@ export const UserProvider = ({ children }: ProviderPropsModel) => {
     }
   }
 
-  const handleDeleteUser = (user: User) => {
+  const handleDeleteUser = (deleteUser: User) => {
     confirmDialog({
-      message: `Seguro desea eliminar el Usuario: ${user.usuario}?`,
+      message: `Seguro desea eliminar el Usuario: ${deleteUser.usuario}?`,
       header: 'Eliminar Usuario',
       icon: 'pi pi-exclamation-triangle',
       accept: async () => {
+        setLoadingUser(true)
         try {
-          await deleteUser(user.id)
-
+          await userServices.deleteUser(deleteUser.id)
+          setUsers((prevUsers) =>
+            prevUsers.filter((user) => user.id !== deleteUser.id)
+          )
+          setTotalCount((prevCount) => prevCount - 1)
           toastContent.current!.show({
             severity: 'success',
             summary: 'Usuario Eliminado',
             detail: 'Usuario Eliminado exitosamente'
           })
-
-          handleGetAllUsers()
         } catch (error) {
           toastContent.current!.show({
             severity: 'error',
             summary: 'Error',
             detail: 'Error al eliminar usuario'
           })
+        } finally {
+          setLoadingUser(false)
         }
       }
     })
